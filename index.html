@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación de Tesis - Análisis Financiero Automatizado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #A6262D; /* Red from logo */
+            --secondary-color: #003366; /* Dark Blue */
+            --accent-color: #D4A017; /* Gold/Yellow */
+            --text-color: #333;
+            --bg-color: #f4f4f9;
+            --slide-bg: #ffffff;
+            --header-font: 'Roboto Slab', serif;
+            --body-font: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            height: 95%;
+            max-height: 800px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--slide-bg);
+            padding: 40px 60px 90px 60px; /* Increased bottom padding for nav */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            /* CRITICAL FIX: Allows vertical scrolling for detailed slides */
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 1;
+        }
+
+        .slide h2, .slide h3, .slide h4 {
+            font-family: var(--header-font);
+            color: var(--secondary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .slide h2 { 
+            font-size: 2em; 
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color); 
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .slide h3 { font-size: 1.5em; }
+        .slide h4 { font-size: 1.25em; color: #555; }
+        
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50, #1c1e22);
+            color: white;
+        }
+        .title-slide h1, .title-slide h2, .title-slide p { color: white; border: none; }
+        .title-slide h1 { font-size: 2.5em; }
+        .title-slide .logo { max-width: 150px; margin-bottom: 20px; }
+        .title-slide .author-info { margin-top: 30px; font-size: 1.1em; line-height: 1.6; }
+
+        ul, ol {
+            padding-left: 30px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 700;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        .table-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .table-container > div {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 25px;
+            right: 30px;
+            font-size: 1em;
+            color: #999;
+            z-index: 5;
+            font-weight: 700;
+        }
+        
+        blockquote {
+            background-color: #e9f2ff;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <section class="slide active title-slide">
+            <img src="https://i.imgur.com/uGzC9uM.png" alt="Logo UNSA" class="logo">
+            <h1>Análisis Automatizado del Desempeño Financiero-Contable de Empresas Peruanas Cotizadas en la BVL (2020-2024)</h1>
+            <h2>para la Optimización de la Toma de Decisiones</h2>
+            <div class="author-info">
+                <p><strong>Tesis presentada por:</strong> Aparicio Florez, Marco Antonio</p>
+                <p><strong>Asignatura:</strong> Diseño de Investigación</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2>Resumen</h2>
+            <p>La capacidad para realizar análisis financieros rigurosos es crítica para la toma de decisiones. En mercados emergentes como el peruano, el análisis sistemático de empresas en la BVL es un desafío a pesar del acceso a datos por plataformas como Yahoo Finance. Persiste la necesidad de una herramienta que sistematice la extracción, procesamiento e interpretación.</p>
+            <p>Esta investigación desarrolla y aplica una <span class="highlight">herramienta computacional en Python</span> para el análisis automatizado de empresas peruanas en la BVL (2020-2024), clasificadas por sector GICS. El estudio busca transformar datos brutos en inteligencia de negocios accionable mediante la generación de insights y benchmarks sectoriales.</p>
+            <p><strong>Metodología:</strong> El estudio es cuantitativo, con un diseño no experimental, longitudinal y descriptivo-comparativo. El instrumento es un script de Python que utiliza la librería `yfinance` para analizar una muestra no probabilística de 31 empresas.</p>
+            <p><strong>Contribución:</strong> La contribución principal es doble: ofrece un análisis contextualizado del desempeño empresarial en un período clave y presenta una herramienta de apoyo a la decisión (DSS) funcional y replicable.</p>
+            <p><strong>Palabras Clave:</strong> Análisis Financiero, Automatización, Python, BVL, Toma de Decisiones, Benchmarking, Ratios Financieros, GICS.</p>
+        </section>
+
+        <section class="slide">
+            <h2>Introducción</h2>
+            <p>El análisis de datos es un pilar fundamental para las decisiones estratégicas en las finanzas modernas. En mercados emergentes como el peruano, caracterizados por su dinamismo y volatilidad, la capacidad para evaluar la salud financiera es una necesidad imperativa.</p>
+            <p>Las empresas en la Bolsa de Valores de Lima (BVL) ofrecen datos públicos de gran valor. Sin embargo, su aprovechamiento sigue siendo una tarea fragmentada. El proceso de análisis manual es <span class="highlight">lento, costoso y propenso a errores</span>, evidenciando la necesidad de soluciones automatizadas.</p>
+            <blockquote>Frente a esta problemática, esta tesis desarrolla una herramienta en Python para automatizar el análisis financiero-contable. El objetivo es transformar el proceso manual en un sistema eficiente que extrae, procesa y compara ratios, generando benchmarks para una contextualización robusta.</blockquote>
+            <p>La investigación sigue una metodología cuantitativa, con un diseño no experimental y longitudinal, analizando una muestra de 31 empresas. El trabajo se estructura en cinco capítulos clave.</p>
+        </section>
+
+        <section class="slide">
+            <h2>CAPÍTULO I: PLANTEAMIENTO DEL PROBLEMA</h2>
+            <h3>1.1 Descripción de la Realidad Problemática</h3>
+            <p>La evaluación del desempeño financiero es un pilar para la toma de decisiones en inversión, gestión y política económica. En el contexto de un mercado emergente como el peruano, las empresas listadas en la Bolsa de Valores de Lima (BVL) ofrecen datos valiosos.</p>
+            <p>Sin embargo, su análisis presenta serios desafíos:</p>
+            <ul>
+                <li><strong>Desafío de Escala y Complejidad:</strong> El análisis manual y comparativo (inter e intrasectorial) es extremadamente intensivo en tiempo y recursos, lo que lo hace poco práctico a gran escala.</li>
+                <li><strong>Falta de Sistematización:</strong> Aunque plataformas como Yahoo Finance democratizan el acceso a los datos, no existe una herramienta unificada que realice la extracción, procesamiento, cálculo y, crucialmente, la interpretación comparativa enfocada en el mercado peruano para generar insights accionables.</li>
+                <li><strong>Necesidad Crítica de Contexto:</strong> Se percibe una carencia de análisis estructurados que no solo evalúen empresas de forma aislada, sino que comprendan la salud financiera del sector, identifiquen tendencias y generen <span class="highlight">benchmarks contextualizados</span>.</li>
+            </ul>
+             <h3>1.2 Línea de Investigación</h3>
+            <p>El estudio se enmarca en: Finanzas Corporativas, Contabilidad Financiera Aplicada, Análisis Automatizado de Estados Financieros, Mercados de Capitales Peruanos y Business Intelligence en Finanzas.</p>
+        </section>
+
+        <section class="slide">
+            <h2>1.3 y 1.4 Formulación del Problema</h2>
+            <h3>1.3 Enunciado del Problema</h3>
+            <p>¿Cómo puede el desarrollo y aplicación de una herramienta de análisis financiero-contable automatizado para empresas peruanas en la BVL (período 2020-2024) generar insights comparativos y benchmarks sectoriales que contribuyan a la optimización de la toma de decisiones de inversión y gestión?</p>
+            
+            <h3>1.4 Formulación del Problema</h3>
+            <h4>1.4.1 Problema General</h4>
+            <blockquote>¿De qué manera un sistema automatizado de análisis del desempeño financiero y la situación contable de empresas peruanas en la BVL (agrupadas por sector GICS, 2020-2024) puede caracterizar y diferenciar su rendimiento, generando información estructurada que facilite y optimice la toma de decisiones financieras?</blockquote>
+            <h4>1.4.2 Problemas Específicos</h4>
+            <ol>
+                <li>¿Cuáles son los valores promedio y la dispersión de los principales ratios financieros para cada sector GICS y cómo estos benchmarks pueden ser utilizados?</li>
+                <li>¿Qué empresas específicas demuestran un desempeño consistentemente superior o inferior a los promedios sectoriales, y qué alertas tempranas puede ofrecer el sistema?</li>
+                <li>¿Qué patrones de evolución, tendencias o cambios significativos se observan en los indicadores financieros clave, y cómo estas tendencias informan las decisiones estratégicas?</li>
+                <li>¿Qué interpretaciones contextualizadas y recomendaciones estratégicas básicas se pueden derivar del análisis comparativo para optimizar la toma de decisiones?</li>
+            </ol>
+        </section>
+
+        <section class="slide">
+            <h2>1.5 Objetivos de la Investigación</h2>
+            <h3>1.5.1 Objetivo General</h3>
+            <p>Desarrollar y aplicar una <span class="highlight">herramienta de análisis financiero-contable automatizado</span> para examinar exhaustivamente una muestra representativa de empresas peruanas en la BVL (clasificadas por GICS, 2020-2024), con el fin de identificar patrones de rendimiento, tendencias evolutivas, generar benchmarks sectoriales y derivar interpretaciones fundamentadas que optimicen la toma de decisiones financieras.</p>
+            
+            <h3>1.5.2 Objetivos Específicos</h3>
+            <ul>
+                <li><strong>Automatizar</strong> la extracción, procesamiento y cálculo de datos de estados financieros (Resultados, Balance, Flujo de Efectivo) usando Python y la librería `yfinance`.</li>
+                <li><strong>Calcular</strong> un conjunto integral de ratios financieros clave (liquidez, solvencia, rentabilidad, etc.) para cada empresa y año, creando una base de datos analítica.</li>
+                <li><strong>Establecer</strong> promedios, medianas y desviaciones estándar de ratios por sector/subsector GICS, creando así benchmarks comparativos para el mercado peruano.</li>
+                <li><strong>Evaluar</strong> críticamente el desempeño de cada empresa analizada frente a los benchmarks sectoriales y umbrales genéricos.</li>
+                <li><strong>Identificar y analizar</strong> patrones de evolución temporal en los indicadores financieros clave (por empresa, subsector y sector) durante el período 2020-2024.</li>
+                <li><strong>Generar</strong> un informe analítico estructurado, producto del sistema automatizado, que presente resultados de forma clara y accesible.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>1.6 Justificación del Estudio</h2>
+            <p>La relevancia de esta investigación se fundamenta en múltiples dimensiones:</p>
+            <ul>
+                <li><strong>Justificación Teórica:</strong> Valida y aplica teorías de análisis financiero en el contexto peruano. Además, contribuye a la teoría de sistemas de apoyo a la decisión (DSS) en finanzas al explorar la automatización.</li>
+                <li><strong>Justificación Práctica:</strong> La herramienta y sus resultados proporcionan <span class="highlight">información procesable y accionable</span> para optimizar las decisiones de inversores, analistas, gestores y académicos.</li>
+                <li><strong>Justificación Metodológica:</strong> Demuestra la eficacia y viabilidad de Python y APIs públicas para realizar investigaciones financieras a gran escala, ofreciendo un modelo replicable que promueve la eficiencia y la capacidad de generar insights oportunos.</li>
+                <li><strong>Justificación Social:</strong> Fomenta la transparencia y democratiza el acceso a análisis comprensibles sobre la salud del tejido empresarial peruano, contribuyendo a decisiones económicas más informadas.</li>
+                <li><strong>Justificación Económica:</strong> Reduce las barreras para el análisis financiero sofisticado, optimizando la asignación de recursos y mejorando la eficiencia en la toma de decisiones de inversión.</li>
+                <li><strong>Justificación para la Toma de Decisiones:</strong> Este es el pilar central. El estudio transforma datos financieros brutos en inteligencia de negocios, proveyendo herramientas y benchmarks para evaluar desempeño y fundamentar estrategias de manera más eficiente.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>1.7 Delimitación, 1.8 Limitaciones y 1.9 Consideraciones Éticas</h2>
+            <h3>1.7 Delimitación de la Investigación</h3>
+            <ul>
+                <li><strong>Temática:</strong> Se centra en el análisis cuantitativo de ratios y métricas de estados financieros públicos. No incluye análisis cualitativo (gestión, gobierno corporativo) ni valoraciones de mercado complejas. El foco es la <span class="highlight">generación automatizada de insights</span>.</li>
+                <li><strong>Espacial:</strong> Empresas peruanas listadas en la BVL cuya información sea accesible a través de la API de Yahoo Finance.</li>
+                <li><strong>Temporal:</strong> Años fiscales del período 2020-2024, un lapso crucial que abarca la dinámica post-pandémica. No incluye proyecciones futuras.</li>
+                <li><strong>Instrumental:</strong> El análisis se basa exclusivamente en la herramienta de Python desarrollada y los datos provistos por la librería `yfinance`.</li>
+            </ul>
+            <h3>1.8 Limitaciones Reconocidas</h3>
+            <ul>
+                <li><strong>Dependencia de la Fuente de Datos:</strong> La precisión y completitud de los resultados dependen enteramente de la calidad de los datos de Yahoo Finance, que pueden tener errores o retrasos.</li>
+                <li><strong>Cobertura de la Muestra:</strong> La muestra es no probabilística por conveniencia (empresas disponibles en la API), lo que puede sesgar la visión de sectores menos representados.</li>
+                <li><strong>Alcance del Análisis Automatizado:</strong> El análisis es primordialmente histórico y cuantitativo. Factores cualitativos críticos para la toma de decisiones no son incorporados por el script.</li>
+                <li><strong>Interpretación Automatizada vs. Juicio Experto:</strong> Las interpretaciones del script son básicas, basadas en umbrales. No reemplazan, sino que <span class="highlight">agilizan y complementan</span> el juicio experto necesario para decisiones complejas.</li>
+            </ul>
+            <h3>1.9 Consideraciones Éticas y Legales</h3>
+            <p>Se utilizarán exclusivamente datos financieros públicos, respetando la privacidad. El análisis será objetivo y sin sesgos. Se reconocerán explícitamente las fuentes y herramientas. El estudio provee información analítica, no asesoría de inversión directa.</p>
+        </section>
+        
+        <section class="slide">
+            <h2>CAPÍTULO II: BASES TEÓRICAS (Antecedentes)</h2>
+            <h3>2.1 Antecedentes Investigativos</h3>
+            <ul>
+                <li><strong>2.1.1 Internacionales:</strong> Existe una amplia literatura sobre el uso de Python para análisis financiero automatizado, análisis de sentimiento y benchmarking (McKinney, 2017; Laha et al., 2020).</li>
+                <li><strong>2.1.2 Nacionales:</strong> Hay estudios sobre desempeño en la BVL, pero con métodos tradicionales. La integración explícita de Python para automatización es un área de oportunidad.</li>
+                <li><strong>2.1.4 Artículos Científicos:</strong> La literatura reciente en Scopus y Web of Science muestra un aumento en la aplicación de Python para análisis financiero, validando el poder predictivo de los ratios contables (Gwilym et al., 2005).</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>CAPÍTULO II: MARCO TEÓRICO Y CONCEPTUAL</h2>
+            <h3>2.2 Marco Epistemológico</h3>
+            <p>La investigación se adscribe a un paradigma <span class="highlight">post-positivista</span>. Este enfoque:</p>
+            <ul>
+                <li>Comparte con el positivismo la búsqueda de objetividad a través de la medición y el análisis de datos cuantitativos.</li>
+                <li>Sin embargo, reconoce que la realidad (especialmente la financiera) es compleja y que el conocimiento obtenido es una <span class="highlight">aproximación perfectible</span>, no una verdad absoluta e inmutable.</li>
+                <li>Se busca la explicación mediante la formulación de hipótesis y su posterior verificación, pero se acepta que los modelos y datos son representaciones simplificadas de una realidad más compleja.</li>
+            </ul>
+            <h3>2.3 Marco Teórico</h3>
+            <p>La investigación se sustenta en teorías y modelos establecidos:</p>
+            <ul>
+                <li><strong>Teoría del Análisis Financiero:</strong> Utiliza relaciones entre partidas de los estados financieros para evaluar el desempeño pasado y la condición actual, con el fin de tomar decisiones informadas sobre el futuro.</li>
+                <li><strong>Análisis de Ratios Financieros:</strong> Son el pilar del análisis. Permiten estandarizar la información para realizar comparaciones temporales y transversales (entre empresas y sectores).</li>
+                <li><strong>Clasificación Industrial Global Estándar (GICS):</strong> Proporciona la estructura taxonómica necesaria para realizar comparaciones sectoriales significativas y coherentes a nivel global.</li>
+                <li><strong>Sistemas de Soporte a la Decisión (DSS):</strong> La herramienta desarrollada se conceptualiza como un DSS, un sistema que apoya las actividades de toma de decisiones al procesar datos y presentar información relevante y oportuna.</li>
+            </ul>
+        </section>
+        
+        <section class="slide">
+            <h2>2.4 Marco Conceptual y 2.5 Marco Normativo</h2>
+            <h3>2.4 Marco Conceptual (Términos Clave)</h3>
+            <ul>
+                <li><strong>Desempeño financiero-contable:</strong> Evaluación de la salud financiera de una empresa.</li>
+                <li><strong>Benchmark sectorial automatizado:</strong> Estándar de comparación generado por el script usando promedios sectoriales.</li>
+                <li><strong>Toma de decisiones basada en datos (DDDM):</strong> Proceso de tomar decisiones estratégicas basadas en el análisis de datos.</li>
+                <li><strong>Insights accionables:</strong> Conclusiones derivadas del análisis que pueden impulsar acciones o decisiones.</li>
+            </ul>
+             <h3>2.5 Marco Normativo</h3>
+            <p>El estudio se enmarca en la regulación vigente:</p>
+            <ul>
+                <li><strong>NIIF en Perú:</strong> La adopción de las Normas Internacionales de Información Financiera es supervisada por el Consejo Normativo de Contabilidad, asegurando la comparabilidad de datos.</li>
+                <li><strong>Regulaciones SMV:</strong> La Superintendencia del Mercado de Valores establece las normas para la presentación de información financiera, lo que garantiza la disponibilidad de datos.</li>
+                <li><strong>Ley General de Sociedades (Ley N° 26887):</strong> Fundamenta la disponibilidad pública de los estados financieros, información esencial para el análisis.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>2.6 Hipótesis de la Investigación</h2>
+            <h3>2.6.1 Hipótesis General (HG)</h3>
+            <blockquote>El análisis financiero-contable automatizado de empresas peruanas cotizadas en la BVL (agrupadas por sector GICS, período 2020-2024) revelará patrones de desempeño, tendencias evolutivas y benchmarks sectoriales significativamente diferenciados, cuya identificación y utilización sistemática contribuirán a la optimización de la toma de decisiones de inversión y gestión.</blockquote>
+            <p><strong>Sustento:</strong> Se basa en la premisa de que el análisis de datos históricos revela la condición y tendencias de una empresa, y que el desempeño varía sistemáticamente entre sectores económicos. La automatización potencia la capacidad de identificar estos patrones de manera eficiente.</p>
+            
+            <h3>2.6.2 Hipótesis Específicas (Ejemplos)</h3>
+            <ul>
+                <li><strong>HE1 (Diferencia de Rentabilidad):</strong> Los benchmarks de ratios de rentabilidad para el sector Minería serán, en promedio, significativamente diferentes a los del sector Consumo Discrecional.
+                <br><em>Sustento:</em> Los sectores tienen estructuras de costos y sensibilidades a ciclos económicos distintas.</li>
+                <li><strong>HE2 (Diferencia de Dispersión):</strong> Se identificará una menor dispersión (desviación estándar) en los ratios de liquidez del subsector Banca Múltiple en comparación con el subsector Software.
+                <br><em>Sustento:</em> Sectores más regulados (banca) tienden a tener estructuras financieras más homogéneas que sectores tecnológicos con empresas en diversas etapas de madurez.</li>
+                <li><strong>HE3 (Tendencia Evolutiva):</strong> Se observará una tendencia de mejora en los ratios de eficiencia promedio del sector Industrial post-pandemia.
+                <br><em>Sustento:</em> Los ratios evolucionan con el tiempo debido a factores macroeconómicos y estratégicos.</li>
+                <li><strong>HE4 (Identificación por Umbrales):</strong> La aplicación de umbrales de desempeño (críticos/óptimos) predefinidos en el script permitirá identificar con mayor eficiencia empresas con potencial riesgo o desempeño sobresaliente.
+                <br><em>Sustento:</em> El uso de "reglas de oro" o umbrales es una práctica común para filtrar y priorizar el análisis.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>2.7 Variables de Investigación (Operacionalización)</h2>
+            <p>La operacionalización define cómo se medirán las variables. En esta tesis, este proceso está implementado directamente en la lógica del script de Python.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoría / Variable</th>
+                        <th>Definición Operacional / Indicadores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Variable Principal: Desempeño Financiero-Contable</strong></td>
+                        <td>Se mide a través de un conjunto de ratios financieros calculados automáticamente por el script, agrupados en dimensiones.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dimensión: Rentabilidad</strong></td>
+                        <td>Medida por los ratios: <strong>ROE</strong> (Utilidad Neta / Patrimonio), <strong>ROA</strong> (Utilidad Neta / Activos Totales), <strong>Margen Neto</strong> (Utilidad Neta / Ventas), etc.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dimensión: Liquidez</strong></td>
+                        <td>Medida por los ratios: <strong>Ratio Corriente</strong> (Activo Corriente / Pasivo Corriente) y <strong>Prueba Ácida</strong> ((Activo Corriente - Inventarios) / Pasivo Corriente).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dimensión: Solvencia</strong></td>
+                        <td>Medida por los ratios: <strong>Deuda/Patrimonio</strong> (Pasivo Total / Patrimonio) y <strong>Deuda/Activos</strong> (Pasivo Total / Activo Total).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dimensión: Eficiencia</strong></td>
+                        <td>Medida por el ratio: <strong>Rotación de Activos Totales</strong> (Ventas / Activos Totales).</td>
+                    </tr>
+                     <tr>
+                        <td><strong>Variables de Agrupación (Independientes)</strong></td>
+                        <td><strong>Sector GICS:</strong> Clasificación textual asignada a cada empresa. <strong>Grupo Industrial GICS:</strong> Subclasificación para análisis más granular.</td>
+                    </tr>
+                     <tr>
+                        <td><strong>Identificadores y Control</strong></td>
+                        <td><strong>Ticker de Empresa:</strong> Código único (ej. 'ALICORC1.LM'). <strong>Período Contable:</strong> Año fiscal (ej. 2022, 2023).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="slide">
+            <h2>CAPÍTULO III: METODOLOGÍA DE LA INVESTIGACIÓN</h2>
+            <h3>3.1 Tipo, Nivel y Diseño de la Investigación</h3>
+            <ul>
+                <li><strong>Enfoque: Cuantitativo.</strong> El núcleo del estudio es la recolección de datos numéricos (ratios, valores de EEFF) y su análisis estadístico para probar hipótesis y establecer patrones.</li>
+                <li><strong>Tipo (Finalidad): Aplicada.</strong> El objetivo no es generar teoría pura, sino desarrollar una solución (el script) para un problema práctico y específico: la optimización de la toma de decisiones financieras.</li>
+                <li><strong>Nivel (Profundidad): Descriptivo-Comparativo.</strong>
+                    <ul>
+                        <li><strong>Descriptivo:</strong> Porque especifica las propiedades y características financieras de las empresas y sectores.</li>
+                        <li><strong>Comparativo:</strong> Porque realiza comparaciones sistemáticas del desempeño entre empresas, entre sectores, y de cada empresa contra los benchmarks generados.</li>
+                    </ul>
+                </li>
+                <li><strong>Diseño: No experimental, Longitudinal retrospectivo.</strong>
+                    <ul>
+                        <li><strong>No experimental:</strong> Porque no se manipulan deliberadamente las variables; se observan y analizan los datos financieros tal como ocurrieron.</li>
+                        <li><strong>Longitudinal retrospectivo:</strong> Porque se recolectan y analizan datos de varios puntos en el tiempo pasados (2020-2024) para estudiar cambios, evolución y tendencias.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>3.2 Unidades de Estudio</h2>
+            <h3>3.2.1 Población</h3>
+            <ul>
+                <li><strong>Población Teórica:</strong> Todas las empresas peruanas que cotizan en la BVL durante el período 2020-2024.</li>
+                <li><strong>Población Accesible (Marco Muestral):</strong> Todas las empresas de la población teórica cuyos datos financieros históricos son recuperables, completos y consistentes a través de la API de `yfinance` y pueden ser clasificadas por GICS.</li>
+            </ul>
+            <h3>3.2.2 Muestra</h3>
+            <ul>
+                <li><strong>Tipo de Muestreo:</strong> <span class="highlight">No probabilístico por conveniencia y por criterio (o intencional)</span>.
+                    <ul>
+                        <li><strong>Por conveniencia:</strong> Se seleccionan casos fácilmente disponibles (datos en la API de Yahoo Finance).</li>
+                        <li><strong>Por criterio:</strong> Se seleccionan empresas que cumplen con tener datos relativamente completos para permitir un análisis significativo y que pertenecen a diversos sectores para el análisis comparativo.</li>
+                    </ul>
+                </li>
+                <li><strong>Tamaño de la Muestra:</strong> <span class="highlight">31 empresas</span>, definidas en el diccionario `PERU_TICKERS` del script.</li>
+            </ul>
+            <p><strong>Justificación de la Muestra:</strong> Aunque no permite generalización estadística, esta aproximación es práctica y común en estudios exploratorios y descriptivos. Los hallazgos serán representativos de este grupo de empresas y ofrecerán insights valiosos.</p>
+        </section>
+
+        <section class="slide">
+            <h2>3.2.2 Muestra - Empresas Incluidas y Distribución</h2>
+            <div class="table-container">
+                <div>
+                    <h4>Cuadro 1: Empresas Peruanas Incluidas (Ejemplos)</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Ticker (Yahoo Finance)</th><th>Nombre de la Empresa</th><th>GICS Sector</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>CORAREI1.LM</td><td>Aceros Arequipa</td><td>Materials</td></tr>
+                            <tr><td>ALICORC1.LM</td><td>Alicorp</td><td>Consumer Staples</td></tr>
+                            <tr><td>AIHC1.LM</td><td>Andino Investment Holding</td><td>Industrials</td></tr>
+                            <tr><td>CONTINC1.LM</td><td>Banco Continental (BBVA)</td><td>Financials</td></tr>
+                            <tr><td>CREDITC1.LM</td><td>Banco de Crédito del Perú</td><td>Financials</td></tr>
+                            <tr><td>BUENAVC1.LM</td><td>Cía. de Minas Buenaventura</td><td>Materials</td></tr>
+                            <tr><td>INRETC1.LM</td><td>InRetail Perú Corp.</td><td>Consumer Discretionary</td></tr>
+                            <tr><td>INTERBC1.LM</td><td>Interbank</td><td>Financials</td></tr>
+                            <tr><td>... (etc.)</td><td>...</td><td>...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4>Cuadro 2: Distribución de la Muestra por Sector GICS</h4>
+                     <table>
+                        <thead>
+                            <tr><th>GICS Sector (Nivel 1)</th><th>Número de Empresas</th></tr>
+                        </thead>
+                        <tbody>
+                           <tr><td>Materials</td><td>12</td></tr>
+                           <tr><td>Financials</td><td>8</td></tr>
+                           <tr><td>Utilities</td><td>4</td></tr>
+                           <tr><td>Industrials</td><td>3</td></tr>
+                           <tr><td>Consumer Staples</td><td>3</td></tr>
+                           <tr><td>Consumer Discretionary</td><td>1</td></tr>
+                           <tr><td><strong>Total</strong></td><td><strong>31</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section class="slide">
+            <h2>3.3 Técnicas e Instrumentos de Recolección de Datos</h2>
+            <p>La innovación de esta tesis radica en la automatización de una técnica tradicional mediante un instrumento de software desarrollado para este fin.</p>
+            <h3>Técnica: Recopilación Documental Secundaria Automatizada</h3>
+            <p>La técnica es la recopilación de datos de "documentos" (estados financieros históricos), que son fuentes secundarias. La clave es que este proceso se ejecuta de forma <span class="highlight">automatizada</span>, no manual.</p>
+            
+            <h3>Instrumento Central: Herramienta de Software (Script de Python)</h3>
+            <p>Es el instrumento central y activo de la investigación. Su función trasciende la simple recolección, constituyendo un sistema de análisis completo.</p>
+            <ul>
+                <li><strong>Fuente de Datos Digital (API):</strong> El instrumento indirecto es la API de Yahoo Finance, que funciona como un puente para acceder a la información.</li>
+                <li><strong>Validación (Rigor Contable):</strong>
+                    <ul>
+                        <li><strong>Validez de Contenido:</strong> Se asegura implementando correctamente las fórmulas estándar de ratios financieros, validadas contra la literatura académica.</li>
+                        <li><strong>Validez de Criterio:</strong> Se propone una auditoría cruzada manual de una submuestra de datos contra los informes oficiales de la SMV para confirmar la fiabilidad de la fuente.</li>
+                        <li><strong>Confiabilidad del Proceso:</strong> La automatización minimiza el error humano en los cálculos. Al ser un programa determinístico, garantiza la reproducibilidad de los resultados.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>3.3 Validez y Confiabilidad del Instrumento</h2>
+            <h4>Validez ("¿El instrumento mide lo que debe medir?")</h4>
+            <ul>
+                <li><strong>Validez de Contenido (Rigor Contable):</strong> Se asegura mediante la correcta implementación de fórmulas de ratios estándar, validadas contra la literatura académica (e.g., Brigham & Houston, 2018).</li>
+                <li><strong>Validez de Criterio (Verificación de Datos):</strong> Se propone una auditoría manual cruzada de una submuestra de datos contra los informes oficiales de la SMV para cuantificar posibles discrepancias.</li>
+                <li><strong>Validez de Constructo (Coherencia Teórica):</strong> La selección y agrupación de ratios en dimensiones (rentabilidad, liquidez, etc.) es consistente con los modelos de análisis financiero establecidos.</li>
+            </ul>
+            <h4>Confiabilidad ("¿Las mediciones son consistentes y reproducibles?")</h4>
+            <ul>
+                <li><strong>Confiabilidad de los Datos (Fuente Secundaria):</strong> Se reconoce la limitación de posibles errores en la fuente, pero se mitiga con un módulo de recolección robusta.</li>
+                <li><strong>Confiabilidad del Proceso (Consistencia del Instrumento):</strong> La automatización <span class="highlight">minimiza el error humano</span> en los cálculos. Al ser un programa determinístico, garantiza la <strong>reproducibilidad</strong> de la investigación.</li>
+            </ul>
+        </section>
+        
+        <section class="slide">
+            <h2>3.4 Procedimiento y 3.5 Plan de Análisis de Datos</h2>
+            <h3>3.4 Procedimiento de Investigación (Flujo Lógico del Sistema)</h3>
+            <p>El procedimiento sigue las fases implementadas en la herramienta de software:</p>
+            <ol>
+                <li><strong>Fase 1 - Preparación y Definición de la Muestra:</strong> Se carga la lista de empresas peruanas (tickers) y sus clasificaciones sectoriales.</li>
+                <li><strong>Fase 2 - Extracción Automatizada de EEFF:</strong> El sistema itera sobre la lista, invocando al módulo de extracción para descargar los datos financieros de cada empresa.</li>
+                <li><strong>Fase 3 - Cálculo de Indicadores Individuales:</strong> Para cada empresa y período, el sistema aplica las fórmulas para calcular los ratios de desempeño.</li>
+                <li><strong>Fase 4 - Cálculo de Benchmarks Comparativos:</strong> Una vez procesadas todas las empresas, se agrupan por sector/subsector y se calculan los promedios de cada indicador.</li>
+                <li><strong>Fase 5 - Diagnóstico Automatizado y Recomendaciones:</strong> El sistema compara los indicadores de cada empresa contra los benchmarks y umbrales, generando diagnósticos textuales.</li>
+                <li><strong>Fase 6 - Consolidación y Generación de Reportes:</strong> Se organiza toda la información en archivos de hoja de cálculo (CSV), uno por cada período, como producto final del proceso.</li>
+            </ol>
+            <h3>3.5 Plan de Análisis de Datos</h3>
+            <p>El análisis se realiza en dos niveles: el automatizado (por el script) y el posterior (por el investigador).</p>
+            <ul>
+                <li><strong>Software:</strong> Python y sus librerías (pandas, numpy, yfinance) para la herramienta. Microsoft Excel, SPSS, R o Python (con matplotlib, seaborn) para el análisis posterior.</li>
+                <li><strong>Técnicas de Análisis Estadístico:</strong>
+                    <ul>
+                        <li><strong>Estadística Descriptiva:</strong> Cálculo de promedios, medianas, desviaciones estándar para entender la distribución de los datos.</li>
+                        <li><strong>Análisis de Tendencias:</strong> Uso de los informes anuales para crear gráficos de evolución de ratios clave.</li>
+                        <li><strong>Pruebas de Hipótesis:</strong> Aplicación de pruebas estadísticas (ej. ANOVA, t de Student) a los datos exportados para validar estadísticamente las diferencias observadas entre sectores (validar HE1, HE2).</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="slide title-slide">
+            <h1>Fin de la Presentación</h1>
+            <h2>Gracias por su atención.</h2>
+        </section>
+
+    </div>
+
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn">Anterior</button>
+        <button id="nextBtn" class="nav-btn">Siguiente</button>
+    </div>
+
+    <div id="slideCounter" class="slide-counter"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        
+        let currentSlide = 0;
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === n) {
+                    slide.scrollTop = 0;
+                }
+            });
+            slides[n].classList.add('active');
+            currentSlide = n;
+            updateCounter();
+        }
+
+        function nextSlide() {
+            let next = currentSlide + 1;
+            if (next >= slides.length) {
+                next = 0; 
+            }
+            showSlide(next);
+        }
+
+        function prevSlide() {
+            let prev = currentSlide - 1;
+            if (prev < 0) {
+                prev = slides.length - 1;
+            }
+            showSlide(prev);
+        }
+        
+        function updateCounter() {
+            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+
+</body>
+</html>
